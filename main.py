@@ -1,48 +1,57 @@
-class Stack(object):
-    stack_list = []
+Balanced_dict = {
+    '(': ')',
+    '[': ']',
+    '{': '}'
+}
 
-    def __init__(self, *args):
-        self.stack_list.extend(args)
-        pass
+Balanced_list = [
+    '(((([{}]))))',
+    '[([])((([[[]]])))]{()}',
+    '{{[()]}}'
+]
+Unbalanced_list = [
+    '}{}',
+    '{{[(])]}}',
+    '[[{())}]'
+]
+General_list=Balanced_list+Unbalanced_list
+
+class Stack(list):
 
     def isEmpty(self):
-        """проверка стека на пустоту. Метод возвращает True или False."""
-        if len(self.stack_list):
-            return False
-        else:
+        if not self:
             return True
+        else:
+            return False
 
-    def push(self, a):
-        """добавляет новый элемент на вершину стека. Метод ничего не возвращает."""
-        self.stack_list.append(a)
+    def push(self, element):
+        self.append(element)
 
     def pop(self):
-        """удаляет верхний элемент стека. Стек изменяется. Метод возвращает верхний элемент стека."""
-        return self.stack_list.pop()
+        if not self.isEmpty():
+            element = self[-1]
+            self.__delitem__(-1)
+        return element
 
     def peek(self):
-        """возвращает верхний элемент стека, но не удаляет его. Стек не меняется."""
-        return self.stack_list[-1]
+        if not self.isEmpty():
+            return self[-1]
 
     def size(self):
-        """возвращает количество элементов в стеке."""
-        return len(self.stack_list)
+        return len(self)
 
-    def print_all(self):
-        print(self.stack_list)
-        pass
 
+def Ballance_check(symbol):
+    stack = Stack()
+    for element in symbol:
+        if element in Balanced_dict:
+            stack.push(element)
+        elif element == Balanced_dict.get(stack.peek()):
+            stack.pop()
+        else:
+            return False
+    return stack.isEmpty()
 
 if __name__ == '__main__':
-    print('Начало: ')
-    st = Stack(1, 2, 4)
-    print(st.isEmpty())
-    st.print_all()
-    st.push(9)
-    st.print_all()
-    print(st.pop())
-    st.print_all()
-    print(st.peek())
-    st.print_all()
-    print(st.size())
-    st.print_all()
+    for element in General_list:
+        print(f'{element:<25}{Ballance_check(element)}')
